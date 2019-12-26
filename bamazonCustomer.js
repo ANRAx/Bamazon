@@ -100,3 +100,24 @@ function makePurchase(product, quantity) {
         }
     );
 }
+
+// Check chosen product against inventory
+function checkInventory(choiceId, inventory) {
+    for (let i = 0; i < inventory.length; i++) {
+        if (inventory[i].item_id === choiceId) {
+            // if a matching product is found, return the product
+            return inventory[i];
+        }
+    }
+    // Otherwise return null
+    return null;
+}
+
+// Check to see if the user wants to quit the program
+function checkIfShouldExit(choice) {
+    if (choice.toLowerCase() === "q") {
+        // Log a message and exit the current node process
+        console.log("Goodbye!");
+        process.exit(0);
+    }
+}
