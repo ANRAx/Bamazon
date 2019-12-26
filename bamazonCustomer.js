@@ -88,3 +88,15 @@ function promptCustomerForQuantity(product) {
         }
     });
 }
+
+// Purchase the desired quantity of the desired item
+function makePurchase(product, quantity) {
+    connection.query(
+        "UPDATE products SET stock_quantity = stock_quantity - ?, product_sales = product_sales + ? WHERE item_id = ?",
+        [quantity, product.price * quantity, product.item_id],
+        function(err, res) {
+            console.log("\nSuccessfully purchased " + quantity + " " + product.product_name + "'s!");
+            loadProducts();
+        }
+    );
+}
