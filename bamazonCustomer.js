@@ -1,9 +1,8 @@
-require("dotenv").config();
+
 // Initialize npm packages
 let mysql = require("mysql");
 let inquirer = require("inquirer");
-
-// require("console.table");
+require("console.table");
 
 // Initialize the connection (stored in a variable) to sync with a MySQL DB
 let connection = mysql.createConnection({
@@ -36,7 +35,7 @@ function loadProducts() {
 }
 
 // Func to prompt the customer for product ID 
-function promptCustomer(inventory) {
+function promptCustomerForItem(inventory) {
     // use inquirerr package to ask user what they want to purchase
     inquirer.prompt([
         {
@@ -69,7 +68,7 @@ function promptCustomerForQuantity(product) {
         {
             type: "input",
             name: "quantity",
-            message: "How many would you like? [Quit with Q]",
+            message: "How many " + product.productname + "(s) would you like? [Quit with Q]",
             validate: function(val) {
                 return val > 0 || val.toLowerCase() === "q";
             }
@@ -80,7 +79,7 @@ function promptCustomerForQuantity(product) {
         let quantity = parseInt(val.quantity);
 
         // If there isn't enough of the chosen product and quantity, alert user and re-run LoadProducts
-        if (quantity > product.stock_quantity) {
+        if (quantity > product.stockquantity) {
             console.log("\nInsufficient quantity!");
             loadProducts();
         } else {
@@ -92,10 +91,10 @@ function promptCustomerForQuantity(product) {
 // Purchase the desired quantity of the desired item
 function makePurchase(product, quantity) {
     connection.query(
-        "UPDATE products SET stock_quantity = stock_quantity - ?, product_sales = product_sales + ? WHERE item_id = ?",
-        [quantity, product.price * quantity, product.item_id],
+        "UPDATE products SET stockquantity = stockquantity - ?, productsales = productsales + ? WHERE itemid = ?",
+        [quantity, product.price * quantity, product.itemid],
         function(err, res) {
-            console.log("\nSuccessfully purchased " + quantity + " " + product.product_name + "'s!");
+            console.log("\nSuccessfully purchased " + quantity + " " + product.productname + "'s!");
             loadProducts();
         }
     );
@@ -104,7 +103,7 @@ function makePurchase(product, quantity) {
 // Check chosen product against inventory
 function checkInventory(choiceId, inventory) {
     for (let i = 0; i < inventory.length; i++) {
-        if (inventory[i].item_id === choiceId) {
+        if (inventory[i].itemid === choiceId) {
             // if a matching product is found, return the product
             return inventory[i];
         }
