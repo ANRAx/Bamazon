@@ -62,3 +62,29 @@ function promptCustomer(inventory) {
         }
     });
 }
+
+// Prompt the customer for a product quantity
+function promptCustomerForQuantity(product) {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "quantity",
+            message: "How many would you like? [Quit with Q]",
+            validate: function(val) {
+                return val > 0 || val.toLowerCase() === "q";
+            }
+        }
+    ]).then(function(val) {
+        // Check if the user wants to quit the program 
+        checkIfShouldExit(val.quantity);
+        let quantity = parseInt(val.quantity);
+
+        // If there isn't enough of the chosen product and quantity, alert user and re-run LoadProducts
+        if (quantity > product.stock_quantity) {
+            console.log("\nInsufficient quantity!");
+            loadProducts();
+        } else {
+            makePurchase(product, quantity);
+        }
+    });
+}
