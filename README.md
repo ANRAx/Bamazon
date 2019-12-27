@@ -2,7 +2,7 @@
 
 ## Description
 
-Bamazon implements a simple command line based storefront using the `NPM Inquirer Package` and `MySQL` along with the `NPM MySQL` package for the database backend. Three interfaces will be presented: **Customer**, **Manager**, and **Supervisor**.
+Bamazon implements a simple command line based storefront using the `NPM Inquirer Package` and `MySQL` along with the `NPM MySQL` package for the database backend. Three interfaces will be presented: **Customer** and  **Manager**.
 
 ### Customer Interface
 
@@ -41,3 +41,9 @@ The **Add New Product** option allows the user to enter details about a new prod
       * node bamazonManager.js
       
 ### Screenshots
+
+      Customer Interface
+      ![bamcustomer](https://user-images.githubusercontent.com/40881197/71524300-f349dc00-289a-11ea-97bc-29dccb723f05.gif)
+
+      Manager Interface
+      ![bammanager](https://user-images.githubusercontent.com/40881197/71524321-09579c80-289b-11ea-936f-4e73e4c65c0a.gif)
