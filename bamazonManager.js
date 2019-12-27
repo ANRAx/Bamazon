@@ -65,5 +65,41 @@ function loadManagerOptions(products) {
     });
 }
 
+// Query DB for low inventory products
+function loadLowInventory() {
+    // Select all of the produycts that have a quantity of 5 or less
+    connection.query("SELECT * FROM products WHERE stock_quantity <=5",
+    function(err, res) {
+        if (err) throw err;
+        // Draw table in terminal with response and load manager menu
+        console.table(res);
+        loadManagerMenu();
+    });
+}
 
+// Prompt the manager for a product to replenish 
+function addToInventory(inventory) {
+    console.table(inventory);
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "choice",
+            message: "What is the ID of the item you would like to add to?",
+            validate: function(val) {
+                return !isNaN(val);
+            }
+        }
+    ]).then(function(val) {
+        let choiceId = parseInt(val.choice);
+        let product = checkInventory(choiceId, inventory);
+
+        // If a product can be found with the choice id pass chosen product to promptCustomerForQuantity else let the user know and reload the managermenu
+        if (product) {
+            promptManagerForQuantity(product);
+        } else {
+            console.log("\nThat item is not in the inventory.");
+            loadManagerMenu();
+        }
+    });
+}
 
