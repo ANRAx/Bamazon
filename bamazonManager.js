@@ -140,3 +140,73 @@ function addNewProduct() {
     });
 }
 
+// Prompts manager for new product info, then adds new product
+function getProductInfo(departments) {
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "productname",
+            message: "What is the name of the product you would like to add?"
+        },
+        {
+            type: "list",
+            name: "departmentname",
+            choices: getDepartmentNames(departments);
+            message: "Which department does this product fall into?"
+        },
+        {
+            type: "input",
+            name: "price",
+            message: "How much does it cost?",
+            validate: function(val) {
+                return val > 0;
+            }
+        },
+        {
+            type: "input",
+            name: "quantity",
+            message: "How many do we have?",
+            validate: function(val) {
+                return !isNaN(val);
+            }
+        }
+    ]);
+}
+
+// adds new product to the db
+function insertNewProduct(val) {
+    connection.query(
+        "INSERT INTO products (productname, departmentname, price, stockquantity) VALUES (?, ?, ?, ?)",
+        [val.productname, val.departmentname, val.price, val.quantity],
+        function(err, res) {
+            if (err) throw err;
+            console.log(val.productname + " ADDED TO BAMAZON!\n");
+            // When done, rerun loadManagerMenu to restart app
+            loadManagerMenu();
+        }
+    );
+}
+
+// Gets all of the departments and runs a callback function when done 
+function getDepartments(cb) {
+    connection.query("SELECT * FROM departments", cb);
+}
+
+// Is passed an array of departments from the db and returns an array of ONLY dept names
+function getDepartmentNames(departments) {
+    return departments.map(function(department) {
+        return department.department_name;
+    });
+}
+
+// Check to see if the product the user chose exists int he inventory 
+function checkInventory(choiceId, inventory) {
+    for (let i = 0; i < inventory.length; i++) {
+        if (inventory[i].itemid === choiceId) {
+            // if a matching product is found, return the product
+            return inventory[i];
+        }
+    }
+    // Otherwise return null
+    return null;
+}
