@@ -55,6 +55,9 @@ function loadManagerOptions(products) {
                 loadLowInventory();
                 break;
             case "Add to Inventory":
+                addToInventory(products);
+                break;
+            case "Add New Product":
                 addNewProduct(products);
                 break;
             default:
@@ -151,7 +154,7 @@ function getProductInfo(departments) {
         {
             type: "list",
             name: "departmentname",
-            choices: getDepartmentNames(departments);
+            choices: getDepartmentNames(departments),
             message: "Which department does this product fall into?"
         },
         {
@@ -195,7 +198,7 @@ function getDepartments(cb) {
 // Is passed an array of departments from the db and returns an array of ONLY dept names
 function getDepartmentNames(departments) {
     return departments.map(function(department) {
-        return department.department_name;
+        return department.departmentname;
     });
 }
 
