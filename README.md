@@ -43,7 +43,7 @@ The **Add New Product** option allows the user to enter details about a new prod
 ### Screenshots
 
       Customer Interface
-     
+![bamcustomer](https://user-images.githubusercontent.com/40881197/71524484-d82b9c00-289b-11ea-83d2-93ffc7ccc9e6.gif)
 
       Manager Interface
-      
+
