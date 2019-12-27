@@ -68,7 +68,7 @@ function loadManagerOptions(products) {
 // Query DB for low inventory products
 function loadLowInventory() {
     // Select all of the produycts that have a quantity of 5 or less
-    connection.query("SELECT * FROM products WHERE stock_quantity <=5",
+    connection.query("SELECT * FROM products WHERE stockquantity <=5",
     function(err, res) {
         if (err) throw err;
         // Draw table in terminal with response and load manager menu
@@ -100,6 +100,43 @@ function addToInventory(inventory) {
             console.log("\nThat item is not in the inventory.");
             loadManagerMenu();
         }
+    });
+}
+
+// Ask for the quantity that should be added to the chosen product
+function promptManagerForQuantity(product) {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "quantity",
+            message: "How many would you like to add?",
+            validate: function(val) {
+                return val > 0;
+            }
+        }
+    ]).then(function(val) {
+        let quantity = parseInt(val.quantity);
+        addQuantity(product, quantity);
+    });
+}
+
+// Adds chosen quantity to specified product
+function addQuantity(product, quantity) {
+    connection.query(
+        "UPDATE products SET stockquantity = ? Where itemid = ?",
+        [product.stockquantity + quantity, product.itemid],
+        function(err, res) {
+            // let the user know the purchase was successful, re-run loadProducts
+            console.log("\nSuccessfully added " + quantity + " " + product.productname + "'s\n");
+            loadManagerMenu();
+        }
+    );
+}
+
+// Gets all departments, then gets the new product info and inserts the new product into DB
+function addNewProduct() {
+    getDepartments(function(err, departments) {
+        getProductInfo(departments).then(insertNewProduct);
     });
 }
 
