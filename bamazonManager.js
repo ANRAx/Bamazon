@@ -23,3 +23,47 @@ connection.connect(function(err) {
     }
     loadManagerMenu();
 });
+
+// Get product data from db
+function loadManagerMenu() {
+    connection.query("SELECT * FROM products", function(err, res) {
+        if (err) throw err;
+        loadManagerOptions(res);
+    });
+}
+
+// Load manager options and pass product data from DB
+function loadManagerOptions(products) {
+    inquirer.prompt({
+        type: "list",
+        name: "choice",
+        choices: [
+            "View Products for Sale",
+            "View Low Inventory",
+            "Add to Inventory",
+            "Add New Product",
+            "Quit"
+        ],
+        message: "What would you like to do?"
+    }).then(function(val) {
+        switch (val.choice) {
+            case "View Products for Sale":
+                console.table(products);
+                loadManagerMenu();
+                break;
+            case "View Low Inventory":
+                loadLowInventory();
+                break;
+            case "Add to Inventory":
+                addNewProduct(products);
+                break;
+            default:
+                console.log("Goodbye!");
+                process.exit(0);
+                break;
+        }
+    });
+}
+
+
+
